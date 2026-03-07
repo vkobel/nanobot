@@ -490,7 +490,7 @@ class MatrixChannel(BaseChannel):
         return False
 
     def _media_dir(self) -> Path:
-        d = get_data_dir() / "media" / "matrix"
+        d = self.workspace / "media" / "matrix"
         d.mkdir(parents=True, exist_ok=True)
         return d
 

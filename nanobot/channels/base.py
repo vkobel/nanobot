@@ -1,6 +1,7 @@
 """Base channel interface for chat platforms."""
 
 from abc import ABC, abstractmethod
+from pathlib import Path
 from typing import Any
 
 from loguru import logger
@@ -19,16 +20,18 @@ class BaseChannel(ABC):
 
     name: str = "base"
 
-    def __init__(self, config: Any, bus: MessageBus):
+    def __init__(self, config: Any, bus: MessageBus, workspace: Path | None = None):
         """
         Initialize the channel.
 
         Args:
             config: Channel-specific configuration.
             bus: The message bus for communication.
+            workspace: The workspace directory path.
         """
         self.config = config
         self.bus = bus
+        self.workspace = workspace or Path.home() / ".nanobot"
         self._running = False
 
     @abstractmethod
