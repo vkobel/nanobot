@@ -23,12 +23,10 @@ def test_runtime_dirs_follow_config_path(monkeypatch, tmp_path: Path) -> None:
     assert get_logs_dir() == config_file.parent / "logs"
 
 
-def test_media_dir_supports_channel_namespace(monkeypatch, tmp_path: Path) -> None:
-    config_file = tmp_path / "instance-b" / "config.json"
-    monkeypatch.setattr("nanobot.config.paths.get_config_path", lambda: config_file)
-
-    assert get_media_dir() == config_file.parent / "media"
-    assert get_media_dir("telegram") == config_file.parent / "media" / "telegram"
+def test_media_dir_supports_channel_namespace() -> None:
+    workspace = get_workspace_path()
+    assert get_media_dir() == workspace / "media"
+    assert get_media_dir("telegram") == workspace / "media" / "telegram"
 
 
 def test_shared_and_legacy_paths_remain_global() -> None:
