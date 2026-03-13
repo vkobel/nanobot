@@ -594,7 +594,9 @@ class TelegramChannel(BaseChannel):
             media_dir = get_media_dir("telegram")
             unique_id = getattr(media_file, "file_unique_id", media_file.file_id)
             file_path = media_dir / f"{unique_id}{ext}"
+            logger.info("Downloading {} to {}", media_type, file_path)
             await file.download_to_drive(str(file_path))
+            logger.info("Downloaded {} ({} bytes)", file_path, file_path.stat().st_size)
             path_str = str(file_path)
             if media_type in ("voice", "audio"):
                 transcription = await self.transcribe_audio(file_path)
@@ -604,7 +606,7 @@ class TelegramChannel(BaseChannel):
                 return [path_str], [f"[{media_type}: {path_str}]"]
             return [path_str], [f"[{media_type}: {path_str}]"]
         except Exception as e:
-            logger.warning("Failed to download message media: {}", e)
+            logger.warning("Failed to download {} media: {}", media_type, e, exc_info=True)
             if add_failure_content:
                 return [], [f"[{media_type}: download failed]"]
             return [], []
